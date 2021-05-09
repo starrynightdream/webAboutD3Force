@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-09 23:25:06
+ * @Last Modified time: 2021-05-10 00:03:50
  */
 
 const testLinkData = [
@@ -133,6 +133,7 @@ const main = new Vue({
                 .style('pointer-events', 'visible')
                 .on('click', function(node) {
                     // TODO: click event 如果有则显示细节信息,并且需要兼顾文字长度
+                    // 并且只有自己有细节信息的情况才需要点击事件
                     _self.intoDetail();
                 })
                 .on('dblclick', function (e) {
