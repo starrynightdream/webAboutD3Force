@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-10 09:06:48
+ * @Last Modified time: 2021-05-10 14:42:27
  */
 
 const testLinkData = [
@@ -48,6 +48,8 @@ const main = new Vue({
         sglobal : {},
 
         searchKey: "",
+
+        showRobot: false,
 
     },
     methods:{
@@ -132,13 +134,13 @@ const main = new Vue({
                 })
                 .style('pointer-events', 'visible')
                 .on('click', function(node) {
+                    // TODO: click event 添加新节点
+                    _self.getData(1, false);
+                })
+                .on('dblclick', function (e) {
                     // TODO: click event 如果有则显示细节信息,并且需要兼顾文字长度
                     // 并且只有自己有细节信息的情况才需要点击事件
                     _self.intoDetail();
-                })
-                .on('dblclick', function (e) {
-                    // TODO: click event 添加新节点
-                    _self.getData(1, false);
                 })
                 .call(_self.sglobal.drag);
         },
@@ -212,12 +214,6 @@ const main = new Vue({
             const _self = this;
             const svg = _self.sglobal.svg;
             const force = _self.sglobal.force;
-            const drag = _self.sglobal.drag;
-
-            const link = _self.sglobal.link;
-            const circle = _self.sglobal.circle;
-            const linkText = _self.sglobal.linkText;
-            const cirText = _self.sglobal.cirText;
 
             force.nodes( Object.values(_self.sglobal.nodes));
             force.force('link').links(_self.sglobal.edges);
@@ -284,6 +280,22 @@ const main = new Vue({
             const cirText = _self.cirTextDraw(_self, Object.values( _self.sglobal.nodes), 
                 svg.append('g').attr('id', 'cirTextG').attr('class', 'transitionAble'));
             _self.sglobal.cirText = cirText;
+
+            const shower = svg.append('g')
+                .attr('id', 'showerG')
+                .append('rect')
+                .attr('id', 'infoShower')
+                .attr('x', 10)
+                .attr('y', 10)
+                .attr('width', (d)=>{return _self.width - 20})
+                .attr('height', 0)
+                .attr('fill', (d)=>{return d3.hsl(showerColor, 0.7, 0.5)})
+                .on('click', ()=>{
+
+                    _self.outDeatil();
+                })
+        
+            _self.sglobal.shower = shower;
         }
     },
     mounted: function() {
@@ -346,21 +358,6 @@ const main = new Vue({
 
         _self.reDraw();
         
-        const shower = svg.append('g')
-            .attr('id', 'showerG')
-            .append('rect')
-            .attr('id', 'infoShower')
-            .attr('x', 10)
-            .attr('y', 10)
-            .attr('width', (d)=>{return _self.width - 20})
-            .attr('height', 0)
-            .attr('fill', (d)=>{return d3.hsl(showerColor, 0.7, 0.5)})
-            .on('click', ()=>{
-
-                _self.outDeatil();
-            })
-        
-        _self.sglobal.shower = shower;
     },
 });
 

@@ -19,6 +19,12 @@
                  class="rInput" @keydown.enter="getData(searchKey, true)" v-model='searchKey'/>
             </div>
             <div id="drawPath" class="mainShow"></div>
+            <div class="bottom">
+                <iframe :hidden="!showRobot" src="/robot.html" class="robotPlan"></iframe>
+                <button class="switchBut" @click="showRobot = !showRobot">
+                    {{ showRobot?"关闭":"机器人面板" }}
+                </button>
+            </div>
         </div>
     </body>
 </html>
