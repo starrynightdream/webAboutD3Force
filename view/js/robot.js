@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-10 08:55:21 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-10 23:00:14
+ * @Last Modified time: 2021-05-10 23:17:34
  */
 
 const gDataList = [
@@ -22,7 +22,7 @@ Vue.component('talk-word', {
             :e="getDetail" :porp="d" :word="d">
         </link-item>
         <link-item v-for="k in talkdetail.keyWordL" 
-            :e="getKeyWord" :porp="k" :word="k">
+            :e="createKeyWordSearch" :porp="k" :word="k">
         </link-item>
         </p>
     </div>
@@ -41,12 +41,12 @@ Vue.component('talk-word', {
     methods:{
         // UPPER: 这里使用的全局形式并不是最安全的写法
         getDetail: function (p) {
-            // TODO: 向端口请求具体数据
+            // TODO: 向端口请求具体数据，此处是查询对应详细属性
             vueMain.addWordToShow('TheFindAns', false);
             vueMain.toTalkEnd();
         },
-        getKeyWord: function(p) {
-            // TODO: 向端口请求具体数据
+        // 创建一个包含具体病名的查询对话
+        createKeyWordSearch: function(p) {
             vueMain.talkingRecode.push({
                 word:`对于${p}, 您可以向下查找:\n`, isMyWord:false,
                 dname: p,
@@ -108,7 +108,7 @@ window.onload = ()=>{
             },
 
             getDataFromPort: (word) =>{
-                // TODO: 替换为真正的请求数据
+                // TODO: 替换为真正的请求数据，此处应当获取问题的可能键值
                 for (let i=0; i<3; i++)
                     word += word;
                 return word;
