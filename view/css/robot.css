@@ -1,0 +1,53 @@
+
+.myWord {
+    display: flex;
+    display: -webkit-flex;
+
+    flex-direction: row-reverse;
+}
+
+.myWord p{
+    max-width: 40vw;
+    word-wrap: break-word;
+    background-color: gray;
+    border-radius: 10px;
+    
+    padding: 10px;
+}
+
+.robotWord {
+    display: flex;
+    display: -webkit-flex;
+
+    flex-direction: row;
+}
+
+.robotWord p {
+    max-width: 40vw;
+    word-wrap: break-word;
+    background-color: aqua;
+    border-radius: 10px;
+    
+    padding: 10px;
+}
+
+.speakToRobot{
+    width: 70vw;
+    height: 7vh;
+    border-radius: 20px;
+    
+    font-size: 3vh;
+    text-align: center;
+}
+
+#talking {
+    overflow: scroll;
+}
+
+#talking::-webkit-scrollbar{
+    display: none;
+}
+
+.H10vh{
+    height: 20vh;
+}
