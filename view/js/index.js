@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-10 14:42:27
+ * @Last Modified time: 2021-05-10 21:26:51
  */
 
 const testLinkData = [
@@ -29,6 +29,23 @@ const testLinkData = [
         {source: 1, target: 2, reals: 'num', type: 'test'},
         {source: 2, target: 4, reals: 'num', type: 'test'},
     ]
+]
+const testDeatilData = [
+    [{name: 0, detailText: 
+    `
+    test
+    estt
+    stte
+    ttes
+    1234
+    2234
+    3234
+    4234
+    1277
+    2277
+    7777
+    `
+    }]
 ]
 
 
@@ -133,14 +150,19 @@ const main = new Vue({
                     return d3.hsl(Math.random() * 2 * 360, 0.6, 0.5);
                 })
                 .style('pointer-events', 'visible')
-                .on('click', function(node) {
+                .on('click', function(node, d) {
                     // TODO: click event 添加新节点
-                    _self.getData(1, false);
+                    _self.getData(d.name, false);
+                    d.fixed = true;
                 })
-                .on('dblclick', function (e) {
+                .on('dblclick', function (e, d) {
                     // TODO: click event 如果有则显示细节信息,并且需要兼顾文字长度
                     // 并且只有自己有细节信息的情况才需要点击事件
-                    _self.intoDetail();
+                    if (d.detailText){
+                        // TODO: 设定细节文本
+                        d.fixed = true;
+                        _self.intoDetail(d.detailText.split('\n'));
+                    }
                 })
                 .call(_self.sglobal.drag);
         },
@@ -167,17 +189,52 @@ const main = new Vue({
                 .attr('y', d=>{return d.y;})
                 .text(d=>{return d.name;})
         },
+        // 较为复杂的版面绘制
+        showerDraw : (_self, root) =>{
+
+            let makeR = root.append('g')
+                .attr('id', 'showerG');
+                
+            // TODO: 更丰富的变化基础
+            makeR.append('rect')
+                .attr('id', 'infoShower')
+                .attr('x', 10)
+                .attr('y', 10)
+                .attr('width', (d)=>{return _self.width - 20})
+                .attr('height', 0)
+                .attr('fill', (d)=>{return d3.hsl(showerColor, 0.7, 0.5)})
+                .on('click', ()=>{
+                    _self.outDeatil();
+                });
+            return makeR;
+        },
         // 详细页面的进入逻辑
-        intoDetail : function () {
-            this.sglobal.shower
+        intoDetail : function (texts) {
+            // TODO: 添加动态效果以及文字的显示的效果修正
+            this.sglobal.shower.select('rect')
                 .transition( d3.transition().duration(300))
                 .attr('height', this.height - 10);
+            // 字体设置
+            let text = this.sglobal.shower.append('text')
+                .attr('fill', d3.rgb(100,100,100))
+                .attr('fill', d3.rgb(0,0,0))
+                .attr('x', '10vw')
+                .attr('y', '10vh');
+            text.selectAll('tspan')
+                .data(texts)
+                .enter()
+                .append('tspan')
+                .html(d=>{return d})
+                .attr('x', '10vw')
+                .attr('dy', '1em');
         },
         // 详细页面的离开逻辑
         outDeatil : function () {
-            this.sglobal.shower
+            // TODO: 根据进入修正离开的逻辑
+            this.sglobal.shower.select('rect')
                 .transition( d3.transition().duration(300))
                 .attr('height', 0);
+            this.sglobal.shower.select('text').remove();
         },
 
         /**
@@ -193,6 +250,7 @@ const main = new Vue({
 
             // TODO: 从后台获取数据
             let data = testLinkData[key % testLinkData.length];
+            let detail = testDeatilData[key % testDeatilData.length];
 
             // 对所有获取的数据
             data.forEach((item) =>{
@@ -201,6 +259,12 @@ const main = new Vue({
                 newData.target = _self.sglobal.nodes[ item.target] || (_self.sglobal.nodes[ item.target] = {name: item.target});
                 newData.reals = item.reals;
                 _self.sglobal.edges.push(newData);
+            });
+
+            detail.forEach( item =>{
+                if (!_self.sglobal.nodes[item.name])  
+                    _self.sglobal.nodes[ item.name] = {name: item.name};
+                _self.sglobal.nodes[item.name].detailText = item.detailText;
             });
 
             if (needClear && _self.sglobal.force){
@@ -281,20 +345,8 @@ const main = new Vue({
                 svg.append('g').attr('id', 'cirTextG').attr('class', 'transitionAble'));
             _self.sglobal.cirText = cirText;
 
-            const shower = svg.append('g')
-                .attr('id', 'showerG')
-                .append('rect')
-                .attr('id', 'infoShower')
-                .attr('x', 10)
-                .attr('y', 10)
-                .attr('width', (d)=>{return _self.width - 20})
-                .attr('height', 0)
-                .attr('fill', (d)=>{return d3.hsl(showerColor, 0.7, 0.5)})
-                .on('click', ()=>{
-
-                    _self.outDeatil();
-                })
-        
+            // 重新绘制shower使得shower在所有物件之上
+            const shower = _self.showerDraw(_self, svg);
             _self.sglobal.shower = shower;
         }
     },
