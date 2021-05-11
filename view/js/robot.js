@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-10 08:55:21 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-11 10:14:11
+ * @Last Modified time: 2021-05-11 14:47:45
  */
 
 const gDataList = [
@@ -70,6 +70,7 @@ window.onload = ()=>{
             ]
         },
         methods: {
+            // TODO: 为对话添加的时候添加一个合适的过度
             sendAsk: function(word){
                 const _self = this;
                 _self.addWordToShow(word, true);
@@ -117,6 +118,7 @@ window.onload = ()=>{
             getDataFromPort: function(word) {
                 // TODO: 替换为真正的请求数据，此处应当获取问题的可能键值
                 this.addDeatilToShow(["A", "B"], true);
+                this.addWordToShow(`对于${["C", "D"].join(', ')}未提供查询支持，请到隔壁知识图谱一看究竟吧.`);
             },
         },
         created: function () {

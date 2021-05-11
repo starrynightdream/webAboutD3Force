@@ -4,6 +4,7 @@
     display: -webkit-flex;
 
     flex-direction: row-reverse;
+
 }
 
 .myWord p{
@@ -20,6 +21,7 @@
     display: -webkit-flex;
 
     flex-direction: row;
+    transition: all 0.5s;
 }
 
 .robotWord p {

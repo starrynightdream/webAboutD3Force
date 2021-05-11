@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-11 11:31:03
+ * @Last Modified time: 2021-05-11 14:39:46
  */
 
 const testLinkData = [
@@ -54,9 +54,10 @@ const cirR = 15;
 const forceStreng = -300;
 const showerColorA = d3.rgb(0, 0, 0);
 const showerColorB = d3.rgb(255, 255, 255);
-const showerColorF = d3.rgb(255, 255, 255);
+const showerColorF = d3.rgb(155, 155, 155);
 const backgroundColor = d3.rgb(14, 0, 83);
 const defaultKey = 12;
+const showerSpeed = 800;
 
 window.onload = () =>{
 
@@ -200,27 +201,12 @@ const main = new Vue({
                 .attr('id', 'showerG');
                 
             // TODO: 更丰富的变化基础
-            // 非遮罩部分
-            let dataNC = [
-                {
-                    height: _self.height/2 -10, 
-                    width: 0,
-                    x: _self.width-10,
-                    y: 10,
-                    fill: showerColorB,
-                    id: 'infoShowerNC1',
-                },
-                {
-                    height: _self.height/2 -10, 
-                    width: 0,
-                    x: 10,
-                    y: _self.width/2,
-                    fill: showerColorB,
-                    id: 'infoShowerNC2',
-                },
-            ];
+            let dataNC = _self.sglobal.dataNC;
+            let dataC = _self.sglobal.dataC;
 
-            makeR.append('g').selectAll('rect')
+            makeR.append('g')
+                .attr('id', 'showerNCG')
+                .selectAll('rect')
                 .data(dataNC)
                 .enter()
                 .append('rect')
@@ -233,14 +219,50 @@ const main = new Vue({
                 .on('click', ()=>{
                     _self.outDeatil();
                 });
+            
+            makeR.append('g')
+                .attr('id', 'showerCG')
+                .selectAll('rect')
+                .data(dataC)
+                .enter()
+                .append('rect')
+                .attr('id', (d)=>{return d.id;})
+                .attr('x', (d)=>{return d.x})
+                .attr('y', (d)=>{return d.y})
+                .attr('width', (d)=>{return d.width;})
+                .attr('height', (d)=>{return d.height;})
+                .attr('fill', (d)=>{return d.fill;})
+                .on('click', ()=>{
+                    _self.outDeatil();
+                });
+
             return makeR;
         },
         // 详细页面的进入逻辑
         intoDetail : function (texts) {
             // TODO: 添加动态效果以及文字的显示的效果修正
-            this.sglobal.shower.select('#infoShower')
-                .transition( d3.transition().duration(300))
-                .attr('height', this.height - 10);
+            // this.sglobal.shower.select('#infoShower')
+            //     .transition( d3.transition().duration(300))
+            //     .attr('height', this.height - 10);
+            const _self = this;
+            let dataNC = _self.sglobal.dataNC;
+            let dataC = _self.sglobal.dataC;
+
+            this.sglobal.shower.select('#showerNCG')
+                .selectAll('rect')
+                .data(dataNC)
+                .transition( d3.transition().duration(showerSpeed))
+                .attr('fill' , d=>{return d.toFill;})
+                .attr('x' , d=>{return d.toX;})
+                .attr('width' , d=>{return d.toWidth;})
+
+            this.sglobal.shower.select('#showerCG')
+                .selectAll('rect')
+                .data(dataC)
+                .transition( d3.transition().duration(showerSpeed))
+                .attr('fill' , d=>{return d.toFill;})
+                .attr('x' , d=>{return d.toX;})
+                .attr('width' , d=>{return d.toWidth;})
 
             // 字体设置
             let text = this.sglobal.shower.append('text')
@@ -248,6 +270,7 @@ const main = new Vue({
                 .attr('fill', d3.rgb(0,0,0))
                 .attr('x', '10vw')
                 .attr('y', '10vh');
+
             text.selectAll('tspan')
                 .data(texts)
                 .enter()
@@ -263,9 +286,30 @@ const main = new Vue({
         // 详细页面的离开逻辑
         outDeatil : function () {
             // TODO: 根据进入修正离开的逻辑
-            this.sglobal.shower.select('rect')
-                .transition( d3.transition().duration(300))
-                .attr('height', 0);
+            // this.sglobal.shower.select('rect')
+            //     .transition( d3.transition().duration(300))
+            //     .attr('height', 0);
+            const _self = this;
+            let dataNC = _self.sglobal.dataNC;
+            let dataC = _self.sglobal.dataC;
+
+            
+            this.sglobal.shower.select('#showerNCG')
+                .selectAll('rect')
+                .data(dataNC)
+                .transition( d3.transition().duration(showerSpeed))
+                .attr('fill' , d=>{return d.fill;})
+                .attr('x' , d=>{return d.x;})
+                .attr('width' , d=>{return d.width;})
+
+            this.sglobal.shower.select('#showerCG')
+                .selectAll('rect')
+                .data(dataC)
+                .transition( d3.transition().duration(showerSpeed))
+                .attr('fill' , d=>{return d.fill;})
+                .attr('x' , d=>{return d.x;})
+                .attr('width' , d=>{return d.width;})
+
             this.sglobal.shower.select('text').remove();
         },
 
@@ -389,6 +433,61 @@ const main = new Vue({
         _self.height = window.innerHeight * 0.6;
         d3.select('body')
             .style('background-color', backgroundColor);
+
+
+        // 非遮罩部分
+        const dataNC = [
+            {
+                height: _self.height/2 -10, 
+                width: 0,
+                toWidth: _self.width / 2 -10,
+                x: _self.width - 10,
+                toX: _self.width / 2,
+                y: 10,
+                fill: showerColorB,
+                toFill: showerColorB,
+                id: 'infoShowerNC1',
+            },
+            {
+                height: _self.height/2 -10, 
+                width: 0,
+                toWidth: _self.width/2 -10,
+                x: 10,
+                toX: 10,
+                y: _self.height/2,
+                fill: showerColorB,
+                toFill: showerColorB,
+                id: 'infoShowerNC2',
+            },
+        ];
+
+        // 遮罩部分
+        const dataC = [
+            {
+                height: _self.height/2 -10, 
+                width: 0,
+                toWidth: _self.width - 20,
+                x: 10,
+                toX: 10,
+                y: 10,
+                fill: showerColorA,
+                toFill: showerColorF,
+                id: 'infoShowerC1',
+            },
+            {
+                height: _self.height/2 -10, 
+                width: 0,
+                toWidth: _self.width - 20,
+                x: _self.width-10,
+                toX: 10,
+                y: _self.height/2,
+                fill: showerColorA,
+                toFill: showerColorF,
+                id: 'infoShowerC2',
+            },
+        ];
+        _self.sglobal.dataNC = dataNC;
+        _self.sglobal.dataC = dataC;
 
         // 获取默认数据
         let urlKeys = window.location.href.split('?');
