@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-10 08:55:21 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-10 23:17:34
+ * @Last Modified time: 2021-05-11 10:14:11
  */
 
 const gDataList = [
@@ -47,12 +47,7 @@ Vue.component('talk-word', {
         },
         // 创建一个包含具体病名的查询对话
         createKeyWordSearch: function(p) {
-            vueMain.talkingRecode.push({
-                word:`对于${p}, 您可以向下查找:\n`, isMyWord:false,
-                dname: p,
-                detailL: gDataList ,
-                id : vueMain.talkingRecode[ vueMain.talkingRecode.length-1] +1,
-            });
+            vueMain.addDeatilToShow(gDataList, false, p);
             vueMain.toTalkEnd();
         }
     }
@@ -72,13 +67,6 @@ window.onload = ()=>{
                     isMyWord: false, word: "欢迎访问机器人",
                     id:0
                 },
-                {
-                    'isMyWord': true, 'word': "AB", id:1, 
-                },
-                {
-                    isMyWord: false,word:"您是否在找：\n", id:2, 
-                    keyWordL:["A", "B"], 
-                }
             ]
         },
         methods: {
@@ -87,8 +75,7 @@ window.onload = ()=>{
                 _self.addWordToShow(word, true);
                 _self.toTalkEnd();
 
-                let data = _self.getDataFromPort(word);
-                this.addWordToShow(data);
+                _self.getDataFromPort(word);
                 _self.toTalkEnd();
             },
             // 将一句话添加到展示中
@@ -96,6 +83,26 @@ window.onload = ()=>{
                 const _self = this;
                 _self.talkingRecode.push({
                     isMyWord, word, 'id': _self.talkingRecode.slice(-1)[0].id +1
+                });
+            },
+            // 将一个具有详细展示的信息添加到界面中
+            addDeatilToShow: function(L, isKeyWordList, dname) {
+                const _self = this;
+                let isMyWord = false;
+                let word = '';
+                let id = _self.talkingRecode[ vueMain.talkingRecode.length-1] +1;
+                let detailL = []; let keyWordL = [];
+
+                if (isKeyWordList){
+                    word = '您是否在找';
+                    keyWordL = L;
+                }else{
+                    word = `对于${dname}, 您可以向下查找:\n`
+                    detailL = L;
+                }
+
+                _self.talkingRecode.push({
+                    isMyWord, word, dname, detailL, keyWordL
                 });
             },
             // 滚动至底部
@@ -107,11 +114,9 @@ window.onload = ()=>{
                 });
             },
 
-            getDataFromPort: (word) =>{
+            getDataFromPort: function(word) {
                 // TODO: 替换为真正的请求数据，此处应当获取问题的可能键值
-                for (let i=0; i<3; i++)
-                    word += word;
-                return word;
+                this.addDeatilToShow(["A", "B"], true);
             },
         },
         created: function () {

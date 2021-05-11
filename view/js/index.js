@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-10 21:26:51
+ * @Last Modified time: 2021-05-11 11:31:03
  */
 
 const testLinkData = [
@@ -50,9 +50,12 @@ const testDeatilData = [
 
 
 // setting param
-const cirR = 12;
+const cirR = 15;
 const forceStreng = -300;
-const showerColor = 270;
+const showerColorA = d3.rgb(0, 0, 0);
+const showerColorB = d3.rgb(255, 255, 255);
+const showerColorF = d3.rgb(255, 255, 255);
+const backgroundColor = d3.rgb(14, 0, 83);
 const defaultKey = 12;
 
 window.onload = () =>{
@@ -187,6 +190,7 @@ const main = new Vue({
                 .append('text')
                 .attr('x', d=>{return d.x;})
                 .attr('y', d=>{return d.y;})
+                .style('fill', 'rgb(255, 255, 255)')
                 .text(d=>{return d.name;})
         },
         // 较为复杂的版面绘制
@@ -196,13 +200,36 @@ const main = new Vue({
                 .attr('id', 'showerG');
                 
             // TODO: 更丰富的变化基础
-            makeR.append('rect')
-                .attr('id', 'infoShower')
-                .attr('x', 10)
-                .attr('y', 10)
-                .attr('width', (d)=>{return _self.width - 20})
-                .attr('height', 0)
-                .attr('fill', (d)=>{return d3.hsl(showerColor, 0.7, 0.5)})
+            // 非遮罩部分
+            let dataNC = [
+                {
+                    height: _self.height/2 -10, 
+                    width: 0,
+                    x: _self.width-10,
+                    y: 10,
+                    fill: showerColorB,
+                    id: 'infoShowerNC1',
+                },
+                {
+                    height: _self.height/2 -10, 
+                    width: 0,
+                    x: 10,
+                    y: _self.width/2,
+                    fill: showerColorB,
+                    id: 'infoShowerNC2',
+                },
+            ];
+
+            makeR.append('g').selectAll('rect')
+                .data(dataNC)
+                .enter()
+                .append('rect')
+                .attr('id', (d)=>{return d.id;})
+                .attr('x', (d)=>{return d.x})
+                .attr('y', (d)=>{return d.y})
+                .attr('width', (d)=>{return d.width;})
+                .attr('height', (d)=>{return d.height;})
+                .attr('fill', (d)=>{return d.fill;})
                 .on('click', ()=>{
                     _self.outDeatil();
                 });
@@ -211,9 +238,10 @@ const main = new Vue({
         // 详细页面的进入逻辑
         intoDetail : function (texts) {
             // TODO: 添加动态效果以及文字的显示的效果修正
-            this.sglobal.shower.select('rect')
+            this.sglobal.shower.select('#infoShower')
                 .transition( d3.transition().duration(300))
                 .attr('height', this.height - 10);
+
             // 字体设置
             let text = this.sglobal.shower.append('text')
                 .attr('fill', d3.rgb(100,100,100))
@@ -226,7 +254,11 @@ const main = new Vue({
                 .append('tspan')
                 .html(d=>{return d})
                 .attr('x', '10vw')
-                .attr('dy', '1em');
+                .attr('dy', '1em')
+                .attr('fill', backgroundColor)
+                .transition( d3.transition().duration(800))
+                .attr('fill', 'white')
+
         },
         // 详细页面的离开逻辑
         outDeatil : function () {
@@ -355,6 +387,8 @@ const main = new Vue({
         // 获取宽高
         _self.width = window.innerWidth * 0.9;
         _self.height = window.innerHeight * 0.6;
+        d3.select('body')
+            .style('background-color', backgroundColor);
 
         // 获取默认数据
         let urlKeys = window.location.href.split('?');
