@@ -4,6 +4,7 @@
         <title>Vue Dev</title>
         <meta charset="utf-8" />
         <link type="text/css" rel="stylesheet" href="/view/css/svgPart.css" />
+        <link type="text/css" rel="stylesheet" href="/view/loginmoban/css/login.css" />
 
         <script type="text/javascript" src="/view/js/vue.min.js"></script>
         <script type="text/javascript" src="/view/js/vue-resource.min.js"></script>
@@ -13,18 +14,28 @@
     </head>
     <body>
         <div id="main" class="contain">
-            <div id="toolBar" class="topToolBar"></div>
+            <div id="toolBar" class="topToolBar">
+                <div class="sysTitle"><h1 id="Title">医知图解Medicine</h1></div>
+            </div>
             <div id="search" class="mainBehaver">
                 <input type="text" name="searchText" id="searchText"
                  class="rInput" @keydown.enter="getData(searchKey, true)" v-model='searchKey'/>
             </div>
             <div id="drawPath" class="mainShow"></div>
             <div class="bottom">
-                <iframe :hidden="!showRobot" src="/robot.html" class="robotPlan"></iframe>
-                <button class="switchBut" @click="showRobot = !showRobot">
-                    {{ showRobot?"关闭":"机器人面板" }}
+                <!-- <iframe :hidden="!showRobot" src="/robot.html" class="robotPlan"></iframe> -->
+                <iframe src="/robot.html" class="robotPlan"></iframe>
+                <button class="switchBut" @click="clickRobot">
+                    {{ showRobot?"关闭":"机器人" }}
                 </button>
             </div>
         </div>
-    </body>
+
+
+		<div id="particles-js" style="display: flex;align-items: center;justify-content: center">
+			<canvas class="particles-js-canvas-el" style="width: 100%; height: 100%;" width="472" height="625"></canvas>
+		</div>
+
+        <script type="text/javascript" src="/view/loginmoban/js/login.js"></script>
+        <script type="text/javascript" src="/view/loginmoban/js/loginApp.js"></script>
 </html>

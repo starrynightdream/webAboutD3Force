@@ -2,12 +2,13 @@
  * @Author: SND 
  * @Date: 2021-05-10 08:55:21 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-11 14:47:45
+ * @Last Modified time: 2021-05-12 22:24:56
  */
 
-const gDataList = [
-    'diss', 'recove', 'cure_time'
-]
+// setting
+const DefaultQ = {
+    "des": '名称'
+}
 
 // UPPER: 也许写成局部组件会更加安全？
 Vue.component('talk-word', {
@@ -19,7 +20,7 @@ Vue.component('talk-word', {
         <p>
         <span>{{talkdetail.word}}</span>
         <link-item v-for="d in talkdetail.detailL" 
-            :e="getDetail" :porp="d" :word="d">
+            :e="getDetail" :porp="d" :word="talkdetail.dname + ' 的 ' + DefaultQ[d]">
         </link-item>
         <link-item v-for="k in talkdetail.keyWordL" 
             :e="createKeyWordSearch" :porp="k" :word="k">
@@ -42,12 +43,12 @@ Vue.component('talk-word', {
         // UPPER: 这里使用的全局形式并不是最安全的写法
         getDetail: function (p) {
             // TODO: 向端口请求具体数据，此处是查询对应详细属性
-            vueMain.addWordToShow('TheFindAns', false);
+            vueMain.addWordToShow('TheFindAns about ' + p, false);
             vueMain.toTalkEnd();
         },
         // 创建一个包含具体病名的查询对话
         createKeyWordSearch: function(p) {
-            vueMain.addDeatilToShow(gDataList, false, p);
+            vueMain.addDeatilToShow(Object.keys(DefaultQ), false, p);
             vueMain.toTalkEnd();
         }
     }
@@ -103,7 +104,7 @@ window.onload = ()=>{
                 }
 
                 _self.talkingRecode.push({
-                    isMyWord, word, dname, detailL, keyWordL
+                    isMyWord, word, dname, detailL, keyWordL, id
                 });
             },
             // 滚动至底部
@@ -117,8 +118,8 @@ window.onload = ()=>{
 
             getDataFromPort: function(word) {
                 // TODO: 替换为真正的请求数据，此处应当获取问题的可能键值
-                this.addDeatilToShow(["A", "B"], true);
-                this.addWordToShow(`对于${["C", "D"].join(', ')}未提供查询支持，请到隔壁知识图谱一看究竟吧.`);
+                this.addDeatilToShow(['A', 'B'], true);
+                // this.addWordToShow(`对于${["C", "D"].join(', ')}未提供查询支持，请到隔壁知识图谱一看究竟吧.`);
             },
         },
         created: function () {

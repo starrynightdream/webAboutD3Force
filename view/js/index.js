@@ -2,32 +2,32 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-11 14:39:46
+ * @Last Modified time: 2021-05-12 22:28:36
  */
 
 const testLinkData = [
     [
-        {source: 1, target: 2, reals: 'num', type: 'test'},
-        {source: 1, target: 3, reals: 'num', type: 'test'},
-        {source: 1, target: 4, reals: 'num', type: 'test'},
-        {source: 1, target: 5, reals: 'num', type: 'test'},
-        {source: 1, target: 6, reals: 'num', type: 'test'},
-        {source: 1, target: 7, reals: 'num', type: 'test'},
-        {source: 1, target: 8, reals: 'num', type: 'test'},
-        {source: 1, target: 9, reals: 'num', type: 'test'},
-        {source: 1, target: 0, reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 2, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 3, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 4, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 5, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 6, targetType: 'Symptom', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 7, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 8, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 9, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 0, targetType: 'Disease', reals: 'num', type: 'test'},
     ],
     [
-        {source: 0, target: -1, reals: 'num', type: 'test'},
-        {source: 0, target: -2, reals: 'num', type: 'test'},
-        {source: 0, target: -3, reals: 'num', type: 'test'},
-        {source: 0, target: -4, reals: 'num', type: 'test'},
-        {source: 0, target: -5, reals: 'num', type: 'test'},
+        {source: 0, sourceTypt: 'Disease', target: -1, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 0, sourceTypt: 'Disease', target: -2, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 0, sourceTypt: 'Disease', target: -3, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 0, sourceTypt: 'Disease', target: -4, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 0, sourceTypt: 'Disease', target: -5, targetType: 'Disease', reals: 'num', type: 'test'},
     ],
     [
-        {source: 0, target: 4, reals: 'num', type: 'test'},
-        {source: 1, target: 2, reals: 'num', type: 'test'},
-        {source: 2, target: 4, reals: 'num', type: 'test'},
+        {source: 0, sourceTypt: 'Disease', target: 4, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 1, sourceTypt: 'Disease', target: 2, targetType: 'Disease', reals: 'num', type: 'test'},
+        {source: 2, sourceTypt: 'Disease', target: 4, targetType: 'Disease', reals: 'num', type: 'test'},
     ]
 ]
 const testDeatilData = [
@@ -58,6 +58,23 @@ const showerColorF = d3.rgb(155, 155, 155);
 const backgroundColor = d3.rgb(14, 0, 83);
 const defaultKey = 12;
 const showerSpeed = 800;
+const robotSpeed = 5;
+
+const RealObj = {
+    'Disease' : '疾病',
+    'Symptom' : '疾病症状',
+    'Check' : '诊断项目',
+    'Department' : '医疗科室',
+    'Food' : '食物',
+    'Drug' : '药品',
+    'Prodducer' : '在售药品',
+}
+const PerDegInObjColor = 360 / Object.keys(RealObj).length;
+const NameToColor = {};
+
+Object.keys(RealObj).forEach((item, idx)=>{
+    NameToColor[item] = d3.hsl(idx * PerDegInObjColor, 0.7, 0.5);
+});
 
 window.onload = () =>{
 
@@ -70,7 +87,7 @@ const main = new Vue({
 
         searchKey: "",
 
-        showRobot: false,
+        showRobot: true,
 
     },
     methods:{
@@ -129,6 +146,24 @@ const main = new Vue({
             // 重启以适用新值， 否则会出现计算终止
             this.sglobal.force.alpha(0.1).restart();
         },
+        // 机器人的点击事件
+        clickRobot : function(){
+            // TODO：对面板施加合适的CSS变化
+            this.showRobot = !this.showRobot;
+            if (this.showRobot){
+
+                d3.select('.robotPlan')
+                    .transition( d3.transition().duration(robotSpeed))
+                    .style('height', '80vh')
+                    .style('border', '2px soild');
+            } else {
+
+                d3.select('.robotPlan')
+                    .transition( d3.transition().duration(robotSpeed))
+                    .style('height', '0')
+                    .style('border', 'none');
+            }
+        },
         // 线的绘制函数
         linkDraw :(_self, data, rootNode)=>{
 
@@ -151,7 +186,7 @@ const main = new Vue({
                 .append('circle')
                 .attr('r', cirR)
                 .style('fill', node=>{
-                    return d3.hsl(Math.random() * 2 * 360, 0.6, 0.5);
+                    return NameToColor[node.cType];
                 })
                 .style('pointer-events', 'visible')
                 .on('click', function(node, d) {
@@ -241,9 +276,6 @@ const main = new Vue({
         // 详细页面的进入逻辑
         intoDetail : function (texts) {
             // TODO: 添加动态效果以及文字的显示的效果修正
-            // this.sglobal.shower.select('#infoShower')
-            //     .transition( d3.transition().duration(300))
-            //     .attr('height', this.height - 10);
             const _self = this;
             let dataNC = _self.sglobal.dataNC;
             let dataC = _self.sglobal.dataC;
@@ -286,9 +318,6 @@ const main = new Vue({
         // 详细页面的离开逻辑
         outDeatil : function () {
             // TODO: 根据进入修正离开的逻辑
-            // this.sglobal.shower.select('rect')
-            //     .transition( d3.transition().duration(300))
-            //     .attr('height', 0);
             const _self = this;
             let dataNC = _self.sglobal.dataNC;
             let dataC = _self.sglobal.dataC;
@@ -313,6 +342,32 @@ const main = new Vue({
             this.sglobal.shower.select('text').remove();
         },
 
+        createSample : function(){
+            const d = document.createElement('div');
+            d.className = 'pcShower';
+            d.width = window.innerWidth * 0.1;
+            d.height = window.innerHeight * 0.01 * Object.keys(RealObj).length;
+            
+            const fomtStr = 
+            `
+            <div style="display: flex; display: -webkit-flex; align-items: center; justify-items: center;">
+                <div style="width: 1vh; height: 1vh; background-color: #color#;"></div>
+                <span> - </span>
+                <span>#word#</span>
+            </div>
+            `;
+
+            let inner = '';
+
+
+            Object.keys(RealObj).forEach(item =>{
+                inner += fomtStr.replace('#color#', NameToColor[item]).replace('#word#', RealObj[item]);
+            });
+
+            d.innerHTML = inner;
+            document.getElementsByTagName('body')[0].append(d);
+        },
+
         /**
          * 根据key查找数据并更新
          * @param {string} key 查找的键值
@@ -333,6 +388,8 @@ const main = new Vue({
                 const newData = {};
                 newData.source = _self.sglobal.nodes[ item.source] || (_self.sglobal.nodes[ item.source] = {name: item.source});
                 newData.target = _self.sglobal.nodes[ item.target] || (_self.sglobal.nodes[ item.target] = {name: item.target});
+                _self.sglobal.nodes[ item.source].cType = item.sourceTypt;
+                _self.sglobal.nodes[ item.target].cType = item.targetType;
                 newData.reals = item.reals;
                 _self.sglobal.edges.push(newData);
             });
@@ -434,8 +491,11 @@ const main = new Vue({
         d3.select('body')
             .style('background-color', backgroundColor);
 
+        d3.select('#Title')
+            .transition( d3.transition().duration(500))
+            .attr('class', 'titleAfter');
 
-        // 非遮罩部分
+        // 非遮罩部分数据
         const dataNC = [
             {
                 height: _self.height/2 -10, 
@@ -461,7 +521,7 @@ const main = new Vue({
             },
         ];
 
-        // 遮罩部分
+        // 遮罩部分数据
         const dataC = [
             {
                 height: _self.height/2 -10, 
@@ -542,7 +602,9 @@ const main = new Vue({
         _self.sglobal.svg = svg;
 
         _self.reDraw();
+        _self.clickRobot();
         
+        _self.createSample();
     },
 });
 

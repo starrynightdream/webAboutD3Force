@@ -34,6 +34,25 @@ body{
     height: 10vh;
     border: none;
     margin: 0px;
+    display: flex;
+    display: -webkit-flex;
+
+    padding: 2vw;
+
+    flex-flow: column nowrap;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+}
+
+.sysTitle h1{
+    transition: all 0.5s;
+    /* text-shadow: 6px 6px 3px black; */
+    color: white;
+}
+
+.titleAfter{
+    text-shadow: 6px 6px 3px black;
 }
 
 .mainBehaver {
@@ -72,9 +91,8 @@ body{
     left: 10vw;
     top: 10vh;
     width: 80vw;
-    height: 80vh;
-
-    transition: all 0.5s linear;
+    height: 0vh;
+    border: none;
 }
 
 .switchBut{
@@ -85,4 +103,33 @@ body{
     width: 8vw;
     height: 6vh;
     border-radius: 20px;
+}
+
+svg{
+    z-index: 1;
+}
+button{
+    z-index: 1;
+}
+input{
+    z-index: 1;
+}
+iframe{
+    z-index: 2;
+    transition: all 1s;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+.pcShower{
+    position: absolute;
+    left: 0px;
+    bottom: 2vh;
+
+    display: flex;
+    display: -webkit-flex;
+
+    flex-direction: column;
 }

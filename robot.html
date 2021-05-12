@@ -15,7 +15,10 @@
     </head>
     <body>
         <div id="main" class="contain">
-            <div id="toolBar" class="topToolBar"></div>
+            <div id="toolBar" class="topToolBar">
+                <div class=""><h2 style="color: gray;">Robot</h2></div>
+                <hr style="width: 80%;"/>
+            </div>
             <div id="talking"  style="width: 90vw;height: 70vh;">
                 <talk-word v-for="t in talkingRecode" :talkdetail='t'></talk-word>
                 <div id="talkend" name="1" href="#talkend" class="H10vh"></div>
