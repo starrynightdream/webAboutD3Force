@@ -2,7 +2,7 @@
  * @Author: SND 
  * @Date: 2021-05-05 22:47:32 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-12 22:28:36
+ * @Last Modified time: 2021-05-13 11:59:29
  */
 
 const testLinkData = [
@@ -51,7 +51,7 @@ const testDeatilData = [
 
 // setting param
 const cirR = 15;
-const forceStreng = -300;
+const forceStreng = -800;
 const showerColorA = d3.rgb(0, 0, 0);
 const showerColorB = d3.rgb(255, 255, 255);
 const showerColorF = d3.rgb(155, 155, 155);
@@ -498,25 +498,25 @@ const main = new Vue({
         // 非遮罩部分数据
         const dataNC = [
             {
-                height: _self.height/2 -10, 
+                height: _self.height/2 -5, 
                 width: 0,
-                toWidth: _self.width / 2 -10,
-                x: _self.width - 10,
-                toX: _self.width / 2,
-                y: 10,
+                toWidth: _self.width -10,
+                x: _self.width - 5,
+                toX: 5,
+                y: 5,
                 fill: showerColorB,
-                toFill: showerColorB,
+                toFill: showerColorA,
                 id: 'infoShowerNC1',
             },
             {
-                height: _self.height/2 -10, 
+                height: _self.height/2 -5, 
                 width: 0,
-                toWidth: _self.width/2 -10,
-                x: 10,
-                toX: 10,
+                toWidth: _self.width -10,
+                x: 5,
+                toX: 5,
                 y: _self.height/2,
                 fill: showerColorB,
-                toFill: showerColorB,
+                toFill: showerColorA,
                 id: 'infoShowerNC2',
             },
         ];
@@ -524,25 +524,25 @@ const main = new Vue({
         // 遮罩部分数据
         const dataC = [
             {
-                height: _self.height/2 -10, 
+                height: _self.height/2 -9, 
                 width: 0,
                 toWidth: _self.width - 20,
                 x: 10,
                 toX: 10,
                 y: 10,
-                fill: showerColorA,
-                toFill: showerColorF,
+                fill: showerColorF,
+                toFill: showerColorB,
                 id: 'infoShowerC1',
             },
             {
-                height: _self.height/2 -10, 
+                height: _self.height/2 -9, 
                 width: 0,
                 toWidth: _self.width - 20,
                 x: _self.width-10,
                 toX: 10,
                 y: _self.height/2,
-                fill: showerColorA,
-                toFill: showerColorF,
+                fill: showerColorF,
+                toFill: showerColorB,
                 id: 'infoShowerC2',
             },
         ];

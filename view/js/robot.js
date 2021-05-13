@@ -2,12 +2,26 @@
  * @Author: SND 
  * @Date: 2021-05-10 08:55:21 
  * @Last Modified by: SND
- * @Last Modified time: 2021-05-12 22:24:56
+ * @Last Modified time: 2021-05-13 12:14:25
  */
 
 // setting
 const DefaultQ = {
-    "des": '名称'
+    'disease_cause': '原因',
+    'disease_prevent': '预防措施',
+    'disease_lasttime': '持续时间',
+    'disease_cureprob': '治愈概率',
+    'disease_cureway': '治疗方式',
+    'disease_easyget': '易发人群',
+    'disease_desc': '相关介绍',
+    'disease_symptom': '症状',
+    'disease_acompany': '并发症',
+    'disease_not_food': '忌口',
+    'disease_do_food': '能吃的食品',
+    'disease_recommend_food': '建议吃的食品',
+    'disease_check': '进行的检查',
+    'common_drug': '常用药品',
+    'recommend_drug': '基本推荐药品',
 }
 
 // UPPER: 也许写成局部组件会更加安全？
