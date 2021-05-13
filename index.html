@@ -23,11 +23,15 @@
             </div>
             <div id="drawPath" class="mainShow"></div>
             <div class="bottom">
-                <!-- <iframe :hidden="!showRobot" src="/robot.html" class="robotPlan"></iframe> -->
                 <iframe src="/robot.html" class="robotPlan"></iframe>
-                <button class="switchBut" @click="clickRobot">
-                    {{ showRobot?"关闭":"机器人" }}
-                </button>
+                <div class="img-edge-cover">
+                    <img src="/view/res/robot.gif" 
+                    :class="{blurShow : showRobot}"
+                    style="position: absolute; right: 5vw;bottom: 6vh;width: 5vw; height: 6vh;
+                    box-shadow: 0 0 20px white;
+                    border-radius: 50% 50%; z-index: 1;"
+                    @click="clickRobot"/>
+                </div>
             </div>
         </div>
 

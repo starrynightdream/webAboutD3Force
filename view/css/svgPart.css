@@ -133,3 +133,17 @@ iframe{
 
     flex-direction: column;
 }
+
+.img-edge-cover{
+}
+
+.img-edge-cover::after{
+    box-shadow:0 0 50px 30px #ffffff inset;
+}
+
+.img-edge-cover img{
+    transition: all 0.5s;
+}
+.blurShow{
+    filter: blur(1px);
+}
